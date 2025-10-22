@@ -1,10 +1,13 @@
-package it.saimao.maonote;
+package it.saimao.maonote.database;
 
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
+import it.saimao.maonote.dao.NoteDao;
+import it.saimao.maonote.entity.NoteEntity;
 
 @Database(entities = {NoteEntity.class}, version = 1)
 public abstract class MaoDatabase extends RoomDatabase {

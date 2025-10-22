@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NoteActivity">
+    tools:context=".activity.NoteActivity">
 
     <EditText
         android:id="@+id/etTitle"
@@ -33,6 +33,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btClear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -42,6 +43,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
+            android:id="@+id/btSave"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Save"

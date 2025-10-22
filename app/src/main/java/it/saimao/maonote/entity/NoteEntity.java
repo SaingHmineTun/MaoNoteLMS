@@ -1,5 +1,8 @@
-package it.saimao.maonote;
-
+package it.saimao.maonote.entity;
+/*
+Note Entity => Database Table
+NOte Dao    =>
+ */
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

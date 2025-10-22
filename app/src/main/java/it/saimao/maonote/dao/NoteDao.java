@@ -1,4 +1,4 @@
-package it.saimao.maonote;
+package it.saimao.maonote.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,6 +7,8 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
+
+import it.saimao.maonote.entity.NoteEntity;
 
 @Dao
 public interface NoteDao {
@@ -21,5 +23,8 @@ public interface NoteDao {
 
     @Query("SELECT * FROM note_entity;")
     List<NoteEntity> getAllNotes();
+
+    @Query("SELECT * FROM note_entity WHERE id = :id")
+    NoteEntity getNoteById(int id);
 
 }
