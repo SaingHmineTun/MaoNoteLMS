@@ -3,6 +3,7 @@ package it.saimao.maonote.entity;
 Note Entity => Database Table
 NOte Dao    =>
  */
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -15,7 +16,7 @@ public class NoteEntity {
     private String title;
     private String content;
 
-    public NoteEntity(String content, String title) {
+    public NoteEntity(String title, String content) {
         this.content = content;
         this.title = title;
     }

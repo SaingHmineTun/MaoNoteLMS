@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaoNote">
         <activity
+            android:name=".activity.AboutActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.NoteActivity"
             android:exported="false" />
         <activity

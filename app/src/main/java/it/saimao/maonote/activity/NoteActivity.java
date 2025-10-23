@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,6 +16,11 @@ import it.saimao.maonote.dao.NoteDao;
 import it.saimao.maonote.database.MaoDatabase;
 import it.saimao.maonote.databinding.ActivityNoteBinding;
 import it.saimao.maonote.entity.NoteEntity;
+
+/*
+Update Mode : Note has content
+Add Mode : Note is null
+ */
 
 public class NoteActivity extends AppCompatActivity {
     private ActivityNoteBinding binding;
@@ -45,6 +51,8 @@ public class NoteActivity extends AppCompatActivity {
             note = noteDao.getNoteById(noteId);
             binding.etTitle.setText(note.getTitle());
             binding.etContent.setText(note.getContent());
+            binding.btSave.setText("Update");
+            binding.btClear.setText("Delete");
         }
     }
 
@@ -52,25 +60,69 @@ public class NoteActivity extends AppCompatActivity {
         noteDao = MaoDatabase.getInstance(this).noteDao();
     }
 
+    private void clearNote() {
+        binding.etTitle.getText().clear();
+        binding.etContent.setText("");
+    }
+
+    private void deleteNote() {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Note")
+                .setMessage("Are you sure you want to delete this note")
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    noteDao.deleteNote(note);
+                    Toast.makeText(this, "Delete Note Successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
+    }
     private void initActions() {
         binding.btClear.setOnClickListener(v -> {
-            binding.etTitle.getText().clear();
-            binding.etContent.setText("");
+            if (note == null) {
+                clearNote();
+            } else {
+                deleteNote();
+            }
         });
 
         binding.btSave.setOnClickListener(v -> {
-            String title = binding.etTitle.getText().toString();
-            String content = binding.etContent.getText().toString();
-            if (title.isEmpty() || content.isEmpty()) {
-                Toast.makeText(this, "Please fill in title and content to save a note", Toast.LENGTH_SHORT).show();
-                return;
+            if (note == null) {
+                addNote();
+            } else {
+                updateNote();
             }
-
-            noteDao.addNote(new NoteEntity(title, content));
-            finish();
-            Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
-
         });
-
     }
+
+
+    private void updateNote() {
+        String title = binding.etTitle.getText().toString();
+        String content = binding.etContent.getText().toString();
+        if (title.isEmpty() || content.isEmpty()) {
+            Toast.makeText(this, "Please fill in title and content to save a note", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        note.setTitle(title);
+        note.setContent(content);
+        noteDao.updateNote(note);
+        finish();
+        Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void addNote() {
+        String title = binding.etTitle.getText().toString();
+        String content = binding.etContent.getText().toString();
+        if (title.isEmpty() || content.isEmpty()) {
+            Toast.makeText(this, "Please fill in title and content to save a note", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        noteDao.addNote(new NoteEntity(title, content));
+        finish();
+        Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

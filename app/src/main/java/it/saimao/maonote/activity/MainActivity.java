@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.util.List;
 
+import it.saimao.maonote.R;
 import it.saimao.maonote.entity.NoteEntity;
 import it.saimao.maonote.adapter.NoteAdapter;
 import it.saimao.maonote.dao.NoteDao;
@@ -37,9 +39,20 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        initMenuActions();
         initDatabase();
         initRecyclerView();
         initActions();
+    }
+
+    private void initMenuActions() {
+        binding.toolBar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.mAbout) {
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -58,10 +71,18 @@ public class MainActivity extends AppCompatActivity {
     private void initRecyclerView() {
         noteAdapter = new NoteAdapter(this);
         noteAdapter.setOnDeleteNoteListener(note -> {
-            // TODO : show confirm dialog
-            noteDao.deleteNote(note);
-            initDataFromDatabase();
-            Toast.makeText(this, "Delete Note Successfully!", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete Note")
+                    .setMessage("Are you sure you want to delete this note")
+                    .setPositiveButton("Confirm", (dialog, which) -> {
+                        noteDao.deleteNote(note);
+                        initDataFromDatabase();
+                        Toast.makeText(this, "Delete Note Successfully!", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .show();
         });
 
         noteAdapter.setOnEditNoteListener(note -> {
